@@ -9,7 +9,8 @@ profile:
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    Paul Hall
+    
+    Room 229, Paul Hall
     6823 St. Charles Avenue
     New Orleans, LA 70118-5698
 

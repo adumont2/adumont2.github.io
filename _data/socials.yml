@@ -57,18 +57,9 @@
 
 # _data/socials.yml
 
-- name: Envelope
-  icon: fas fa-envelope
-  link: "mailto:adumont2@tulane.edu" # Your email address
+# _data/socials.yml
 
-- name: GitHub
-  icon: fab fa-github
-  link: "https://github.com/adumont2" # Your GitHub profile URL
-
-- name: Google Scholar
-  icon: ai ai-google-scholar-square
-  link: "https://scholar.google.com/citations?user=COrch5sAAAAJ" # Your Google Scholar URL
-
-- name: LinkedIn
-  icon: fab fa-linkedin
-  link: "https://www.linkedin.com/in/aaron-dumont-7b96061a/" # Your LinkedIn URL (Optional but good)
+email: adumont2@tulane.edu
+github_username: adumont2
+scholar_userid: COrch5sAAAAJ
+linkedin_username: aaron-dumont-7b96061a

@@ -504,32 +504,32 @@ ninja.data = [{
           section: "Projects",handler: () => {
               window.location.href = "/projects/9_project/";
             },},{
-        id: 'social-',
-        title: '',
+        id: 'social-email',
+        title: 'email',
         section: 'Socials',
         handler: () => {
-          window.open("", "_blank");
+          window.open("mailto:%61%64%75%6D%6F%6E%74%32@%74%75%6C%61%6E%65.%65%64%75", "_blank");
         },
       },{
-        id: 'social-',
-        title: '',
+        id: 'social-github',
+        title: 'GitHub',
         section: 'Socials',
         handler: () => {
-          window.open("", "_blank");
+          window.open("https://github.com/adumont2", "_blank");
         },
       },{
-        id: 'social-',
-        title: '',
+        id: 'social-scholar',
+        title: 'Google Scholar',
         section: 'Socials',
         handler: () => {
-          window.open("", "_blank");
+          window.open("https://scholar.google.com/citations?user=COrch5sAAAAJ", "_blank");
         },
       },{
-        id: 'social-',
-        title: '',
+        id: 'social-linkedin',
+        title: 'LinkedIn',
         section: 'Socials',
         handler: () => {
-          window.open("", "_blank");
+          window.open("https://www.linkedin.com/in/aaron-dumont-7b96061a", "_blank");
         },
       },{
       id: 'light-theme',

@@ -19,6 +19,9 @@ bibtex_entries = []
 for article in results:
     # The library stores authors as a list of dictionaries
     author_list = article.authors
+    if not author_list:
+        continue # Skip articles with no authors
+        
     authors = " and ".join([f"{author['lastname']}, {author['firstname']}" for author in author_list])
 
     # Create the BibTeX citation key (e.g., Dumont2025Title)
@@ -28,17 +31,33 @@ for article in results:
     citation_key = f"{first_author_lastname}{year}{title_word}"
 
     # Build the BibTeX entry string
+    # Start with the required fields
     entry = f"""@article{{{citation_key},
     title = {{{article.title}}},
     author = {{{authors}}},
     journal = {{{article.journal}}},
-    year = {{{year}}},
-    volume = {{{article.volume}}},
-    number = {{{article.issue}}},
-    pages = {{{article.pages}}},
-    doi = {{{article.doi}}},
-    pmid = {{{article.pubmed_id.splitlines()[0]}}}
-}}"""
+    year = {{{year}}},"""
+
+    # --- FIX STARTS HERE ---
+    # Add optional fields only if they exist on the article object.
+    # We use hasattr() to check for the attribute before accessing it.
+    if hasattr(article, 'volume') and article.volume:
+        entry += f"\n    volume = {{{article.volume}}},"
+    
+    # BibTeX uses "number" for the issue.
+    if hasattr(article, 'issue') and article.issue:
+        entry += f"\n    number = {{{article.issue}}},"
+        
+    if hasattr(article, 'pages') and article.pages:
+        entry += f"\n    pages = {{{article.pages}}},"
+        
+    if hasattr(article, 'doi') and article.doi:
+        entry += f"\n    doi = {{{article.doi}}},"
+    
+    # Always add the PMID and the closing brace
+    entry += f"\n    pmid = {{{article.pubmed_id.splitlines()[0]}}}\n}}"
+    # --- FIX ENDS HERE ---
+
     bibtex_entries.append(entry)
 
 # Ensure the _bibliography directory exists

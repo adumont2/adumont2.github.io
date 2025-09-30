@@ -2,9 +2,6 @@ from pymed import PubMed
 import os
 
 # --- Configuration ---
-# Create a detailed query to ensure you only get your publications.
-# Use your full name, and if needed, add your affiliation to avoid
-# name conflicts. Example: "(Dumont AS[Author]) AND (Tulane[Affiliation])"
 pubmed_query = "Dumont AS[Author]"
 output_file = os.path.join("_bibliography", "references.bib")
 
@@ -17,53 +14,44 @@ print(f"Found publications. Generating BibTeX entries...")
 bibtex_entries = []
 
 for article in results:
-    # The library stores authors as a list of dictionaries
     author_list = article.authors
     if not author_list:
-        continue # Skip articles with no authors
-        
+        continue
+
     authors = " and ".join([f"{author['lastname']}, {author['firstname']}" for author in author_list])
 
-    # Create the BibTeX citation key (e.g., Dumont2025Title)
     first_author_lastname = author_list[0]['lastname'].replace(" ", "")
     year = article.publication_date.year
-    title_word = article.title.split(' ')[0].capitalize()
+    title_word = ''.join(e for e in article.title.split(' ')[0] if e.isalnum()) # Clean the title word
     citation_key = f"{first_author_lastname}{year}{title_word}"
 
-    # Build the BibTeX entry string
-    # Start with the required fields
     entry = f"""@article{{{citation_key},
     title = {{{article.title}}},
     author = {{{authors}}},
     journal = {{{article.journal}}},
     year = {{{year}}},"""
 
-    # --- FIX STARTS HERE ---
-    # Add optional fields only if they exist on the article object.
-    # We use hasattr() to check for the attribute before accessing it.
     if hasattr(article, 'volume') and article.volume:
         entry += f"\n    volume = {{{article.volume}}},"
     
-    # BibTeX uses "number" for the issue.
     if hasattr(article, 'issue') and article.issue:
         entry += f"\n    number = {{{article.issue}}},"
         
     if hasattr(article, 'pages') and article.pages:
         entry += f"\n    pages = {{{article.pages}}},"
         
+    # --- FINAL FIX IS HERE ---
+    # Only take the first DOI if there are multiple lines
     if hasattr(article, 'doi') and article.doi:
-        entry += f"\n    doi = {{{article.doi}}},"
+        first_doi = article.doi.splitlines()[0]
+        entry += f"\n    doi = {{{first_doi}}},"
     
-    # Always add the PMID and the closing brace
     entry += f"\n    pmid = {{{article.pubmed_id.splitlines()[0]}}}\n}}"
-    # --- FIX ENDS HERE ---
 
     bibtex_entries.append(entry)
 
-# Ensure the _bibliography directory exists
 os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
-# Write all entries to the output file
 with open(output_file, 'w', encoding='utf-8') as f:
     f.write("\n\n".join(bibtex_entries))
 

@@ -2,11 +2,9 @@
 layout: page
 permalink: /teaching/
 title: teaching
-description: Materials for courses you taught. Replace this text with your description.
+description: This outlines my current teaching interests and responsibilities.
 nav: true
 nav_order: 6
 ---
 
-For now, this page is assumed to be a static description of your courses. You can convert it to a collection similar to `_projects/` so that you can have a dedicated page for each course.
-
-Organize your courses by years, topics, or universities, however you like!
+I currently teach medical students, residents and faculty within the School of Medicine at Tulane and participate in ad hoc teaching for other Schools at Tulane as well as at outside institutions both in the United States and other countries.

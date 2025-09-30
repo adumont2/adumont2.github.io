@@ -6,6 +6,6 @@ nav: true
 nav_order: 2
 ---
 
-This is where you can describe your research interests.
+My research has focused on stroke and cerebral vascular disease focused on mechanisms of cerebral aneurysm formation and rupture, secondary mechanisms of brain injury following stroke and translational therapies to improve patient care.
 
-talk about your current work with Dr. Ram Mettu, your focus on AI applied to neuroscience, brain health, and healthcare, and any specific projects or long-term goals you have.
+More recently, I have become interested in artificial intelligence and its applications to improve health. My long term research interests are to integrate my background in neuroscience and healthcare with an increasing expertise in computer science to understand brain health and how to optimize it longitudinally.

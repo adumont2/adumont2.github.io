@@ -13,16 +13,16 @@ profile:
     6823 St. Charles Avenue
     New Orleans, LA 70118-5698
 
-selected_papers: true
+selected_papers: false
 social: true
 
 announcements:
-  enabled: true
+  enabled: false
   scrollable: true
   limit: 5
 
 latest_posts:
-  enabled: true
+  enabled: false
   scrollable: true
   limit: 3
 ---

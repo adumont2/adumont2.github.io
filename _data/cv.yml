@@ -26,16 +26,18 @@
 - title: Academic Interests
   type: nested_list
   contents:
-    - title: Topic 1.
+    - title: Computer Science
       items:
-        - Description 1.
-        - Description 2.
-    - title: Topic 2.
+        - Artificial Intelligence
+        - Machine Learning
+        - Data Science
+    - title: Cerebral Vascular Disease
       items:
-        - Description 1.
-        - Description 2.
+        - Intracerebral Hemorrhage
+        - Ischemic Stroke
+        - Brain Aneurysms
 
 - title: Other Interests
   type: list
   contents:
-    - <u>Hobbies:</u> Hobby 1, Hobby 2, etc.
+    - Cooking, reading, running, fitness, sports, music, travel

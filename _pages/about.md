@@ -30,5 +30,4 @@ latest_posts:
 I am currently a graduate student in the Department of Computer Science in the School of Science and Engineering at Tulane University. My graduate advisor is Dr. Ram Mettu. Having been in healthcare for some time, I am excited to learn more about computer science and its application to problems that we continue to face in the world, including human disease and the optimization of wellness. My research interests for my graduate studies focus on the application of artificial intelligence to neuroscience, brain health and healthcare, with the ultimate goal of improving health and wellness for a better world.
 
 **Coursework:** [Click here to view my CMPS 6790 Milestone 1 Project](/Dumont-Milestone1.html)
-
 **Coursework:** [Click here to view my CMPS 6790 Milestone 2 Project](/milestone2.html)

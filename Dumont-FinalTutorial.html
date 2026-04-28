@@ -7476,7 +7476,7 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c0e2c253">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=081fc726">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7490,7 +7490,24 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=099478bf">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=56f8fabc">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<hr/>
+<blockquote>
+<p><strong>Can a single survey question predict depression better than a blood test?</strong></p>
+<p>Clinical depression is a common and important clinical problem. In this tutorial, we'll show that <em>food insecurity</em> — a single question on a household survey — is a stronger predictor of clinical depression than C-Reactive Protein, the gold-standard inflammatory biomarker drawn from a vial of blood. We'll build the models, examine the odds ratios, and walk through every step from raw CDC data to public-health recommendations. By the end, you'll have a complete, reproducible classification + regression pipeline using only free, publicly available data.</p>
+<p><strong>What you'll learn:</strong> how to merge 8 SAS files into a tidy analytic dataset, when to use median vs. mean imputation, why simpler models sometimes beat random forests, and how to interpret odds ratios for a non-technical audience.</p>
+</blockquote>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=38f97200">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7499,7 +7516,7 @@ a.anchor-link {
 <h2 id="Introduction-and-Motivation">Introduction and Motivation<a class="anchor-link" href="#Introduction-and-Motivation">¶</a></h2><p>Depression is a leading cause of disability worldwide. According to the <a href="https://www.nimh.nih.gov/health/statistics/major-depression">National Institute of Mental Health</a>, an estimated 21 million adults in the United States experienced at least one major depressive episode in 2021 alone. While clinical screening tools like the <a href="https://www.apa.org/depression-guideline/patient-health-questionnaire.pdf">Patient Health Questionnaire-9 (PHQ-9)</a> are widely validated for identifying depression, they are primarily administered in clinical settings — meaning most at-risk individuals are never screened.</p>
 <p>This raises a critical question for data science: <strong>can routinely collected lifestyle and physiological metrics — physical activity, sleep, diet security, alcohol consumption, body composition, and systemic inflammation — reliably predict who is at risk for clinical depression?</strong> If so, such models could power population-level screening tools that identify at-risk individuals <em>before</em> they present to a clinic.</p>
 <p>The <a href="https://www.cdc.gov/nchs/nhanes/index.htm">CDC's National Health and Nutrition Examination Survey (NHANES)</a> provides a uniquely powerful dataset for this investigation. Unlike most health surveys, NHANES combines self-reported behavioral data with objective clinical measurements from physical exams and laboratory tests. This fusion of subjective and objective data is rare, and it is precisely what makes NHANES ideal for building interpretable, multi-modal predictive models.</p>
-<p>For this tutorial, I use the most recent completed cycle: <strong>August 2021 – August 2023</strong>. My motivation for selecting this timeframe is to capture contemporary, post-pandemic health trends. The COVID-19 pandemic reshaped physical activity patterns, dietary habits, alcohol consumption, and food security across the US population — all factors hypothesized to affect mental health.</p>
+<p>For this tutorial, we use the most recent completed cycle: <strong>August 2021 – August 2023</strong>. The motivation for selecting this timeframe is to capture contemporary, post-pandemic health trends. The COVID-19 pandemic reshaped physical activity patterns, dietary habits, alcohol consumption, and food security across the US population — all factors hypothesized to affect mental health.</p>
 <h3 id="Research-Questions">Research Questions<a class="anchor-link" href="#Research-Questions">¶</a></h3><ol>
 <li><p><strong>Predictive Modeling (Classification):</strong> Can we accurately predict a positive screening for clinical depression (PHQ-9 ≥ 10) using a combination of modifiable lifestyle factors (vigorous physical activity, sleep duration, alcohol consumption), physiological biomarkers (BMI, C-Reactive Protein), and socioeconomic indicators (income-to-poverty ratio, food security status)?</p>
 </li>
@@ -7516,12 +7533,12 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4ab121f9">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fa63180f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [183]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [57]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -7545,20 +7562,35 @@ a.anchor-link {
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">"whitegrid"</span><span class="p">)</span>
 <span class="n">custom_palette</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'#232D4B'</span><span class="p">,</span> <span class="s1">'#E57200'</span><span class="p">]</span>  <span class="c1"># UVA-inspired palette</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_palette</span><span class="p">(</span><span class="n">custom_palette</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Libraries loaded and visualization style configured."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=002af026">
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Libraries loaded and visualization style configured.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=88a49012">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Extraction,-Transform,-and-Load-(ETL)">Extraction, Transform, and Load (ETL)<a class="anchor-link" href="#Extraction,-Transform,-and-Load-(ETL)">¶</a></h2><h3 id="Data-Sources">Data Sources<a class="anchor-link" href="#Data-Sources">¶</a></h3><p>All data is sourced directly from the <a href="https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?Cycle=2021-2023">CDC's NHANES 2021–2023 public-use repository</a>. NHANES collects data through a complex, stratified, multistage probability sample of the civilian, non-institutionalized US population, combining in-home interviews with standardized physical examinations and laboratory tests at Mobile Examination Centers.</p>
-<p>I extract and merge <strong>eight separate component tables</strong> — each representing a distinct data collection instrument with its own methodology — to build a comprehensive analytic dataset. These tables span three fundamentally different data collection modalities: (1) <strong>household interview</strong> questionnaires (Demographics, Sleep, Physical Activity, Depression Screener, Alcohol Use, Food Security), (2) <strong>Mobile Examination Center (MEC) physical measurements</strong> (Body Measures), and (3) <strong>laboratory assays</strong> on collected biospecimens (high sensitivity C-reactive protein (hs-CRP)). Integrating self-reported behavioral data with objective physical and laboratory measurements is a core strength of NHANES and mirrors the multi-source data fusion challenges common in applied data science:</p>
+<p>We extract and merge <strong>eight separate component tables</strong> — each representing a distinct data collection instrument with its own methodology — to build a comprehensive analytic dataset. These tables span three fundamentally different data collection modalities: (1) <strong>household interview</strong> questionnaires (Demographics, Sleep, Physical Activity, Depression Screener, Alcohol Use, Food Security), (2) <strong>Mobile Examination Center (MEC) physical measurements</strong> (Body Measures), and (3) <strong>laboratory assays</strong> on collected biospecimens (high sensitivity C-reactive protein (hs-CRP)). Integrating self-reported behavioral data with objective physical and laboratory measurements is a core strength of NHANES and mirrors the multi-source data fusion challenges common in applied data science:</p>
 <table>
 <thead>
 <tr>
@@ -7631,21 +7663,24 @@ a.anchor-link {
 <p>The inclusion of hs-CRP (an objective laboratory biomarker), alcohol use (a behavioral risk factor), and food security (a socioeconomic determinant) was motivated by the published literature linking each to depression outcomes. This allows us to test whether physiological, behavioral, and structural factors contribute independently to depression risk — a question with direct implications for designing multi-level interventions.</p>
 <p>For broader population-level context, the <a href="https://www.cdc.gov/places/">CDC PLACES dataset</a> and the <a href="https://www.cdc.gov/brfss/">Behavioral Risk Factor Surveillance System (BRFSS)</a> provide complementary county- and state-level depression prevalence estimates. While these aggregate datasets cannot be merged at the individual level with NHANES, they serve as useful benchmarks for validating whether our micro-level findings align with population trends. For example, BRFSS reports a national adult depression prevalence of approximately 18–21%, compared to our NHANES-derived screening rate of 11%, a difference likely attributable to the PHQ-9 ≥ 10 clinical threshold versus BRFSS's self-reported diagnosis measure. Although this is beyond the focused analysis of the present notebook, this could be examined in future work.</p>
 <h3 id="ETL-Challenges">ETL Challenges<a class="anchor-link" href="#ETL-Challenges">¶</a></h3><ol>
-<li><strong>File Format &amp; Multi-Table Merge:</strong> Data is provided in SAS Transport format (<code>.XPT</code>). I performed sequential inner joins on the unique respondent sequence number (<code>SEQN</code>) across all 8 tables to ensure every record has complete cross-domain information. Because not all NHANES participants complete every exam component, the inner join reduces the sample from 11,933 demographic records to 6,337 respondents who appear in all 8 tables (and 6,064 adults after filtering to age ≥ 20 and dropping rows missing the PHQ-9 target). This attrition is expected — NHANES laboratory and questionnaire modules are administered to age- and exam-specific subsamples — and the resulting analytic cohort is still large enough for robust modeling.</li>
+<li><strong>File Format &amp; Multi-Table Merge:</strong> Data is provided in SAS Transport format (<code>.XPT</code>). We performed sequential inner joins on the unique respondent sequence number (<code>SEQN</code>) across all 8 tables to ensure every record has complete cross-domain information. Because not all NHANES participants complete every exam component, the inner join reduces the sample from 11,933 demographic records to 6,337 respondents who appear in all 8 tables (and 6,064 adults after filtering to age ≥ 20 and dropping rows missing the PHQ-9 target). This attrition is expected — NHANES laboratory and questionnaire modules are administered to age- and exam-specific subsamples — and the resulting analytic cohort is still large enough for robust modeling.</li>
 <li><strong>Cryptic Variable Names:</strong> Raw SAS variable codes (e.g., <code>PAD820</code>, <code>INDFMPIR</code>, <code>ALQ130</code>) were mapped to human-readable names following tidy data principles.</li>
 <li><strong>Survey Skip-Logic NaNs &amp; Special Codes:</strong> In NHANES, if a participant answers "No" to engaging in vigorous activity, the follow-up question about minutes is skipped (recorded as NaN). These were explicitly filled with <code>0</code> to reflect zero minutes of activity. Similarly, participants who reported never drinking alcohol have NaN for average drinks per day, filled with <code>0</code>. For ALQ130 (alcohol), response codes 777 (Refused) and 999 (Don't know) were recoded to NaN before zero-filling. Note: the 2021–2023 cycle dropped the household-level food security variable (FSDHH); we use <code>FSDAD</code> (adult food security category) instead, which is derived from the 10-item US Food Security Survey Module.</li>
 <li><strong>Target Variable Integrity:</strong> Rows missing the PHQ-9 depression score were dropped — we cannot train or evaluate models on an unknown outcome.</li>
 <li><strong>Standard Imputation:</strong> Remaining missing values in features (e.g., unrecorded BMI, CRP) were filled with the column median to preserve cohort size for exploratory analysis (median was used over mean due to less sensitivity to skewing). This is a conservative choice; more sophisticated imputation (e.g., Multiple Imputation by Chained Equations (MICE)) could be explored in future work.</li>
 </ol>
+<blockquote>
+<p><strong>💡 Aside — Why median over mean?</strong> When data is right-skewed (as ours is for CRP, alcohol, and PHQ-9 scores), the mean gets pulled toward the long tail by a small number of extreme values. The median doesn't move with outliers, so it produces a more representative "typical value" for imputation. As a rule of thumb: if <code>df.skew()</code> is greater than 1 or less than -1, prefer the median.</p>
+</blockquote>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8c0e3e46">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=574bc686">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [184]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [58]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8103,7 +8138,7 @@ dtype: object
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=72879c63">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=38b6441b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8116,15 +8151,18 @@ dtype: object
 <li><strong>Statistical hypothesis testing and cross-tabulations</strong> — Formally test key relationships and quantify group differences across multiple dimensions.</li>
 </ol>
 <p>Each analysis is accompanied by a discussion of what the finding means for our modeling strategy.</p>
+<blockquote>
+<p><strong>💡 Aside — Why start with a correlation matrix?</strong> Before building any model, we want to know whether the predictors are linearly related to the target <em>and</em> to each other. Strong predictor-to-target correlations suggest signal. Strong predictor-to-predictor correlations (multicollinearity) can destabilize regression coefficients. A heatmap can provide very critical information upfront.</p>
+</blockquote>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b603a4a6">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d39a086b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [185]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [59]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8187,12 +8225,12 @@ SUMMARY STATISTICS
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7bc0da08">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2c2fe007">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [186]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [60]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8231,7 +8269,7 @@ SUMMARY STATISTICS
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1a8b7afa">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b7d2ef42">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8246,7 +8284,7 @@ SUMMARY STATISTICS
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=118f2abc">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4f7448d7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8256,12 +8294,12 @@ SUMMARY STATISTICS
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7be132a2">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6d6414d2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [187]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [61]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8330,7 +8368,7 @@ SUMMARY STATISTICS
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=170df216">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5c2ccf60">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8343,12 +8381,12 @@ SUMMARY STATISTICS
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=aec7f004">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b195d893">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [188]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [62]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8405,7 +8443,7 @@ SUMMARY STATISTICS
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ca873a0f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8fd048e0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8417,12 +8455,66 @@ SUMMARY STATISTICS
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9479bd1a">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=66f50dee">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>💡 Aside — Picking the right test:</strong> For two binary/categorical variables (e.g., depressed × food-insecure), the <strong>chi-squared test of independence</strong> is appropriate. For a continuous variable compared across two groups, the choice depends on distribution: a <strong>t-test</strong> if the variable is approximately normal, or <strong>Mann-Whitney U</strong> if it's skewed. Below, the skewness check confirms CRP (skew = 8.04) and alcohol (skew = 2.57) are heavily right-skewed — well past the conventional threshold of 1 — so Mann-Whitney is appropriate. Sleep duration is approximately symmetric (skew ≈ −0.09), but we apply Mann-Whitney consistently across all continuous comparisons; it remains valid for symmetric data, with only a small loss of statistical power. Food insecurity is categorical, so chi-squared is the right call. The choice is driven by data type and distribution, not by preference.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ff34c652">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [189]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [63]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Skewness check (&gt;1 = right-skewed, supports non-parametric test):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  CRP_mgL:            skew = </span><span class="si">{</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">'CRP_mgL'</span><span class="p">]</span><span class="o">.</span><span class="n">skew</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Alcohol_Drinks_Day: skew = </span><span class="si">{</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">'Alcohol_Drinks_Day'</span><span class="p">]</span><span class="o">.</span><span class="n">skew</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Sleep_Hours:        skew = </span><span class="si">{</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">'Sleep_Hours'</span><span class="p">]</span><span class="o">.</span><span class="n">skew</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"→ CRP and Alcohol are heavily right-skewed; Mann-Whitney U is appropriate."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"→ Sleep is approximately symmetric; t-test would also be valid, but Mann-Whitney is used for consistency."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Skewness check (&gt;1 = right-skewed, supports non-parametric test):
+  CRP_mgL:            skew = 8.04
+  Alcohol_Drinks_Day: skew = 2.57
+  Sleep_Hours:        skew = -0.09
+
+→ CRP and Alcohol are heavily right-skewed; Mann-Whitney U is appropriate.
+→ Sleep is approximately symmetric; t-test would also be valid, but Mann-Whitney is used for consistency.
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=48b56268">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [65]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8498,12 +8590,12 @@ EDA Stage 3: STATISTICAL TESTS: Depressed vs. Non-Depressed Cohort Comparisons
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b33810ed">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=062bc107">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [190]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [66]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8632,7 +8724,7 @@ CROSS-TABULATION: Mean Feature Values by Depression Status
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3f614ca0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=75f293ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8653,7 +8745,7 @@ CROSS-TABULATION: Mean Feature Values by Depression Status
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0ccf4dcc">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fd1b1e93">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8664,12 +8756,42 @@ CROSS-TABULATION: Mean Feature Values by Depression Status
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e3492b21">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b57fc1a6">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>💡 Aside — Two pre-modeling steps worth understanding:</strong></p>
+<ul>
+<li><strong>Stratified train/test split.</strong> Because only 11% of our sample is depressed, a random 80/20 split could (by chance) leave very few positive cases in the test set. Stratifying preserves the 11% rate in both halves.</li>
+<li><strong>Z-standardization (mean=0, SD=1).</strong> Logistic regression with regularization is sensitive to scale — a feature measured in milligrams (CRP) and one measured in minutes (activity) shouldn't compete on raw units. Standardizing also lets us interpret coefficients as effects-per-standard-deviation, which makes odds ratios directly comparable across features.</li>
+</ul>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=df5600ae">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>💡 Aside — Why fit two classifiers?</strong> We have elected to fit two different classifiers (logistic regression and random forest). Logistic regression assumes the log-odds of depression are a <em>linear</em> combination of predictors. Random Forests make no such assumption — they capture nonlinearities and interactions automatically. If RF dramatically outperforms logistic regression, that's evidence the relationship is nonlinear. If logistic wins, the relationship is approximately linear and the simpler model is preferred for both interpretability and generalization.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=add44980">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [191]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [67]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8810,12 +8932,12 @@ The narrow standard deviation (±0.009) confirms the 80/20 holdout result is sta
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=bb4727ea">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=08a2da95">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [192]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [68]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -8964,12 +9086,12 @@ The narrow standard deviation (±0.009) confirms the 80/20 holdout result is sta
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=511cbbe6">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d0783cbb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [193]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [69]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -9221,7 +9343,20 @@ Odds Ratios with 95% Confidence Intervals:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fb9bd7ca">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9f5691f9">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>💡 Aside — Reading an odds ratio:</strong> An OR of 1.46 for food insecurity means: holding everything else constant, the <em>odds</em> of being depressed are 46% higher for a food-insecure individual than for a food-secure one. OR = 1 means no effect; OR &lt; 1 is protective; OR &gt; 1 is risk. Because we standardized features first, the OR for continuous variables (like CRP at 1.07) reads as: a one-standard-deviation increase in CRP raises the odds of depression by 7%.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6472f469">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9243,12 +9378,12 @@ Odds Ratios with 95% Confidence Intervals:
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=338623e9">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=26f1533a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [194]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [70]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -9289,7 +9424,7 @@ Dep. Variable:             PHQ9_Score   R-squared:                       0.104
 Model:                            OLS   Adj. R-squared:                  0.102
 Method:                 Least Squares   F-statistic:                     77.89
 Date:                Tue, 28 Apr 2026   Prob (F-statistic):          4.45e-137
-Time:                        19:56:13   Log-Likelihood:                -17489.
+Time:                        21:57:53   Log-Likelihood:                -17489.
 No. Observations:                6064   AIC:                         3.500e+04
 Df Residuals:                    6054   BIC:                         3.506e+04
 Df Model:                           9                                         
@@ -9323,12 +9458,12 @@ strong multicollinearity or other numerical problems.
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=981f14be">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=246bea1d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [195]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [71]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># =============================================================================</span>
@@ -9391,7 +9526,7 @@ Mean PHQ-9 Score: 3.51
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8d9e4b26">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a53df3fc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9415,7 +9550,7 @@ Mean PHQ-9 Score: 3.51
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=938f0d6f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=852b2f9e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9457,7 +9592,7 @@ Mean PHQ-9 Score: 3.51
 <li><strong>Median imputation:</strong> Filling missing values with medians preserves sample size but may attenuate associations. More sophisticated imputation methods (e.g., multiple imputation methods) could be explored.</li>
 <li><strong>Self-reported behavioral data:</strong> Physical activity and alcohol consumption are self-reported and subject to social desirability bias. CRP and BMI, being objectively measured, are not affected by this limitation.</li>
 <li><strong>Survey weights not applied:</strong> NHANES uses a complex sampling design with survey weights to produce nationally representative estimates. This tutorial uses unweighted analysis for pedagogical simplicity, which may slightly bias prevalence estimates.</li>
-<li><strong>OLS assumption violations:</strong> The residual and Q-Q plots reveal heteroscedasticity and non-normality, consistent with the right-skewed PHQ-9 distribution. Robust standard errors or a negative binomial GLM could improve inference in future work.</li>
+<li><strong>OLS assumption violations:</strong> The residual and Q-Q plots reveal heteroscedasticity and non-normality, consistent with the right-skewed PHQ-9 distribution. Robust standard errors or a negative binomial generalized linear model (GLM) could improve inference in future work.</li>
 <li><strong>Model scope:</strong> Depression is influenced by many factors not present in NHANES (genetics, childhood trauma, social support, therapy access, etc). Our model explains 10.4% of the variance — the remaining 89.6% reflects unmeasured complexity.</li>
 </ul>
 <h3 id="Future-Directions">Future Directions<a class="anchor-link" href="#Future-Directions">¶</a></h3><ul>
@@ -9471,7 +9606,7 @@ Mean PHQ-9 Score: 3.51
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=847e3c13">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=326b2000">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
